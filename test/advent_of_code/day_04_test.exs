@@ -22,11 +22,22 @@ MXMXAXMASX
     assert result == 18
   end
 
-  @tag :skip
   test "part2" do
-    input = nil
+    input =
+"
+MMMSXXMASM
+MSAMXMSMSA
+AMXSXMAAMM
+MSAMASMSMX
+XMASAMXAMM
+XXAMMXXAMA
+SMSMSASXSS
+SAXAMASAAA
+MAMMMXMMMM
+MXMXAXMASX
+"
     result = part2(input)
 
-    assert result
+    assert result == 9
   end
 end

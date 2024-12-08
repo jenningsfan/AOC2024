@@ -63,6 +63,32 @@ defmodule AdventOfCode.Day04 do
     end
   end
 
+  def mas_appears(grid, row, col, row_len, row_count) do
+    if (col == 0) || (col == row_len - 1) || (row == 0) || (row == row_count - 1) do
+      false
+    else
+      if Enum.at(grid, row * row_len + col) == "A" do
+        diag_left = [Enum.at(grid, (row - 1) * row_len + col - 1), Enum.at(grid, (row + 1) * row_len + col + 1)]
+        diag_right = [Enum.at(grid, (row + 1) * row_len + col - 1), Enum.at(grid, (row - 1) * row_len + col+ 1)]
+        (diag_left == ["M", "S"] || diag_left == ["S", "M"]) && (diag_right == ["M", "S"] || diag_right == ["S", "M"])
+      else
+        false
+      end
+    end
+  end
+
+  def count_mas(grid) do
+    row_count = Enum.count(grid)
+    col_count = Enum.count(List.first(grid))
+    grid = List.flatten(grid)
+
+    Enum.sum(for row <- 0..row_count - 1 do
+      Enum.count(for col <- 0..col_count - 1 do
+        mas_appears(grid, row, col, col_count, row_count)
+      end, fn x -> x end)
+    end)
+  end
+
   def solve_part1(input) do
     row_count = input
       |> Enum.map(&count_row/1)
@@ -73,12 +99,19 @@ defmodule AdventOfCode.Day04 do
     IO.inspect(row_count) + IO.inspect(col_count) + IO.inspect(diag_count)
   end
 
+  def solve_part2(input) do
+    count_mas(input)
+  end
+
   def part1(args) do
     args
     |> parse_input
     |> solve_part1
   end
 
-  def part2(_args) do
+  def part2(args) do
+    args
+    |> parse_input
+    |> solve_part2
   end
 end
