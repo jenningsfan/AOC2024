@@ -16,7 +16,7 @@ defmodule AdventOfCode.Day06 do
   end
 
 
-  def print_map(map, row_count, col_count) do
+  def print_map(map, _, col_count) do
     map
     |> Enum.chunk_every(col_count)
     |> Enum.map(fn line -> Enum.join(Enum.map(line, fn c -> if c, do: "#", else: "." end), "") end)
@@ -33,8 +33,8 @@ defmodule AdventOfCode.Day06 do
     |> Enum.chunk_every(col_count)
     |> Enum.map(&Enum.member?(&1, true))
     |> Enum.with_index()
-    |> Enum.filter(fn {x, i} -> x end)
-    |> Enum.map(fn {x, i} -> i end)
+    |> Enum.filter(fn {x, _} -> x end)
+    |> Enum.map(fn {_, i} -> i end)
     |> MapSet.new
 
     #IO.puts("HELLO YES I HAVE ACTUALLY BEEN UPDATEEDddd!!!!")
@@ -47,13 +47,13 @@ defmodule AdventOfCode.Day06 do
       |> Enum.any?(fn {x, _} -> x end)
     end)
     |> Enum.with_index()
-    |> Enum.filter(fn {x, i} -> x end)
-    |> Enum.map(fn {x, i} -> i end)
+    |> Enum.filter(fn {x, _} -> x end)
+    |> Enum.map(fn {_, i} -> i end)
     |> MapSet.new
 
     obstacles = map
     |> Enum.with_index()
-    |> Enum.filter(fn {x, i} -> x end)
+    |> Enum.filter(fn {x, _} -> x end)
     |> Enum.map(fn {_, i} -> {rem(i, col_count), div(i, row_count)} end)
     |> MapSet.new
 
@@ -93,8 +93,6 @@ defmodule AdventOfCode.Day06 do
   end
 
   def solve_part1({map, start_pos, row_count, col_count}) do
-    at_pos = fn {x, y} -> Enum.at(map, col_count * y + x) end
-
     blank = List.duplicate(false, row_count * col_count)
     coloured_in = colour_in({map, blank, start_pos, {0, -1}, row_count, col_count})
 
@@ -102,8 +100,6 @@ defmodule AdventOfCode.Day06 do
   end
 
   def new_traverse(row_list, col_list, obst_list, before_poses, curr_x, curr_y, change_x, change_y, row_count, col_count) do
-    at_pos = fn array, x, y -> Enum.at(array, col_count * y + x) end
-
     obst_maybe_hit = if change_x != 0 do # going across the row
       Enum.member?(row_list, curr_y)
     else
@@ -136,10 +132,10 @@ defmodule AdventOfCode.Day06 do
         # woo hoo found an obst; we have to continue searching
 
         {obst_x, obst_y} = case {change_x, change_y} do
-          {0, -1} -> Enum.max_by(hit, fn {x, y} -> y end) # UP
-          {0, 1} -> Enum.min_by(hit, fn {x, y} -> y end) # DOWN
-          {-1, 0} -> Enum.max_by(hit, fn {x, y} -> x end) # LEFT
-          {1, 0} -> Enum.min_by(hit, fn {x, y} -> x end) # RIGHT
+          {0, -1} -> Enum.max_by(hit, fn {_, y} -> y end) # UP
+          {0, 1} -> Enum.min_by(hit, fn {_, y} -> y end) # DOWN
+          {-1, 0} -> Enum.max_by(hit, fn {x, _} -> x end) # LEFT
+          {1, 0} -> Enum.min_by(hit, fn {x, _} -> x end) # RIGHT
         end
 
         #IO.inspect({obst_x, obst_y}, label: "Obstacle pos (x, y)")
@@ -201,8 +197,6 @@ defmodule AdventOfCode.Day06 do
   end
 
   def solve_part2({map, {start_x, start_y}, row_count, col_count}) do
-    at_pos = fn {x, y} -> Enum.at(map, col_count * y + x) end
-
     start_pos_i = col_count * start_y + start_x
 
     blank = List.duplicate(false, row_count * col_count)
