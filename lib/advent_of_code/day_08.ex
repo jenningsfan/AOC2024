@@ -1,7 +1,4 @@
 defmodule AdventOfCode.Day08 do
-
-  import Utils
-
   def parse_input(input) do
     map = input
     |> String.split("\n", trim: true)
@@ -23,7 +20,7 @@ defmodule AdventOfCode.Day08 do
     end)
     # remove node name bc we don't need that after collecting them into groups
     # and sort for antinode calculation
-    |> Enum.map(fn {key, nodes} ->
+    |> Enum.map(fn {_, nodes} ->
       Enum.sort_by(nodes, fn {_, y} -> y end)
     end)
 
