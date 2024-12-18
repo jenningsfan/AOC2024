@@ -36,12 +36,16 @@ defmodule AdventOfCode.Day11 do
   end
 
   def part1(args) do
+    Memoize.invalidate() # enable proper benchmarking
+
     args
     |> parse_input
     |> solve(25)
   end
 
   def part2(args) do
+    Memoize.invalidate() # enable proper benchmarking
+
     args
     |> parse_input
     |> solve(75)
