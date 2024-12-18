@@ -5,6 +5,7 @@ defmodule Mix.Tasks.D11.P1 do
 
   @shortdoc "Day 11 Part 1"
   def run(args) do
+    {:ok, _} = Application.ensure_all_started(:memoize)
     input = AdventOfCode.Input.get!(11, 2024)
 
     if Enum.member?(args, "-b"),
